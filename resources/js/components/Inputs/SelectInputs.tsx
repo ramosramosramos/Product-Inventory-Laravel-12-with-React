@@ -25,7 +25,7 @@ interface SelectInputProps {
 
 export function SelectInput({ items = [], label = "Select item",onValueChange ,value}: SelectInputProps) {
     return (
-        <Select defaultValue={"sad"} onValueChange={onValueChange}>
+        <Select defaultValue={value} value={value} onValueChange={onValueChange}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={label} />
             </SelectTrigger>

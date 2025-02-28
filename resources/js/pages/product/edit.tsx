@@ -13,13 +13,13 @@ import { toast } from "sonner"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Create Product',
+        title: 'Edit Product',
         href: route('products.create'),
     },
 ];
 
 
-interface FormCreate {
+interface FormEdit {
     name: string;
     price: string;
     category_id: string;
@@ -27,23 +27,29 @@ interface FormCreate {
 
 }
 
+interface Product {
+    id: number;
+    name: string;
+    price: string;
+    category_id: string;
+}
 
 
-export default function Create({ categories }: { categories: CategorySelect[] }) {
+export default function Edit({ categories, product }: { categories: CategorySelect[], product: Product }) {
 
 
-    const { data, setData, processing, reset, errors, post } = useForm<FormCreate>({
-        name: '',
-        price: "",
-        category_id: "",
+    const { data, setData, processing, reset, errors, post } = useForm<FormEdit>({
+        name: product.name,
+        price: product.price,
+        category_id: product.category_id,
 
     });
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('products.store'), {
+        post(route('products.update', product.id), {
             preserveScroll: true,
             onSuccess: () => {
-                toast.success("Successfully created.");
+                toast.success("Successfully updated.")
                 setTimeout(() => {
                     router.get(route('products.index'));
                 }, 1000);
@@ -92,7 +98,7 @@ export default function Create({ categories }: { categories: CategorySelect[] })
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="name">Category</Label>
-                            <SelectInput value={data.category_id} onValueChange={(value) => setData('category_id', value)} items={categories} label='Select category' />
+                            <SelectInput value={String(data.category_id)} onValueChange={(value) => setData('category_id', value)} items={categories} label='Select category' />
 
                             <InputError message={errors.category_id} />
                         </div>
@@ -100,7 +106,7 @@ export default function Create({ categories }: { categories: CategorySelect[] })
 
                             <Button type="submit" className="mt-4 cursor-pointer" tabIndex={4} disabled={processing}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                Create
+                                Save
                             </Button>
                         </div>
                     </form>
