@@ -1,9 +1,18 @@
 import { ProductTable } from '@/components/Tables/product-table';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { type CategorySelect, type BreadcrumbItem } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
 import { type Product } from '@/types';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { LoaderCircle, LucideMicOff } from 'lucide-react';
+import { FormEventHandler } from 'react';
+import { Select } from '@/components/ui/select';
+import { SelectInput } from '@/components/Inputs/SelectInputs';
+import { toast } from "sonner"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,17 +22,88 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 
+interface FormCreate {
+    name: string;
+    price: string;
+    category_id: string;
+    [key: string]: any;
+
+}
 
 
-export default function Index() {
+
+export default function Create({ categories }: { categories: CategorySelect[] }) {
+
+
+    const { data, setData, processing, reset, errors, post } = useForm<FormCreate>({
+        name: '',
+        price: "",
+        category_id: "",
+
+    });
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+        console.log(data)
+        post(route('products.store'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success("Successfully created")
+            },
+        })
+
+
+    }
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                 </div>
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min">
+                <div className=" p-5 border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border md:min-h-min">
+                    <form onSubmit={submit} className='max-w-md grid gap-5'>
 
+                        <div className="grid gap-2">
+                            <Label htmlFor="name">Product name</Label>
+                            <Input
+                                id="name"
+                                type="text"
+                                autoFocus
+                                tabIndex={1}
+                                autoComplete="name"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+
+                            />
+                            <InputError message={errors.name} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="price"> Price</Label>
+                            <Input
+                                id="price"
+                                type="number"
+                                autoFocus
+                                tabIndex={1}
+                                autoComplete="price"
+                                value={data.price}
+                                onChange={(e) => setData('price', e.target.value)}
+
+                            />
+                            <InputError message={errors.price} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="name">Category</Label>
+                            <SelectInput value={data.category_id} onValueChange={(value) => setData('category_id', value)} items={categories} label='Select category' />
+
+                            <InputError message={errors.category_id} />
+                        </div>
+                        <div>
+
+                            <Button type="submit" className="mt-4 cursor-pointer" tabIndex={4} disabled={processing}>
+                                {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                Create
+                            </Button>
+                        </div>
+                    </form>
 
                 </div>
             </div>

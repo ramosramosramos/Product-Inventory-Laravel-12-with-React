@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\Product;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -18,7 +21,8 @@ class ProductController extends Controller
             ->with('category:id,name')
             ->orderBy('id', 'desc')
             ->paginate(10);
-        return inertia('product/index',['products'=> ProductResource::collection($products)]);
+
+        return inertia('product/index', ['products' => ProductResource::collection($products)]);
     }
 
     /**
@@ -26,7 +30,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return inertia('product/create');
+
+        return inertia('product/create', ['categories' => $this->categories()]);
     }
 
     /**
@@ -34,7 +39,9 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        $slug = Str::slug($request->name . ' ' . 'Inventory');
+        Product::create(array_merge($request->validated(), ['slug' => $slug]));
+        return redirect()->route('products.index');
     }
 
     /**
@@ -67,5 +74,12 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function categories()
+    {
+        return Cache::remember('categories', now()->addHours(24), function () {
+            return Category::select(['id', 'name'])->get();
+        });
     }
 }

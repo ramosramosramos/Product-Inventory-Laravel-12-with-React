@@ -11,7 +11,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,18 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string','unique:products,name'],
+            'price' => ['required', 'numeric'],
+            'category_id' => ['required', 'numeric', 'exists:categories,id'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.unique' => 'The product name has already taken.',
+            'category_id.required' => 'The category field is required',
+            'category_id.exists' => 'The category does not exists in the collections.',
         ];
     }
 }

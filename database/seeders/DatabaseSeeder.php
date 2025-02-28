@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Category;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Support\Str;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {

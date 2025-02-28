@@ -49,3 +49,8 @@ export interface Product {
     price: number;
     category: string;
 }
+
+export interface CategorySelect{
+    id:number;
+    name:string;
+}
