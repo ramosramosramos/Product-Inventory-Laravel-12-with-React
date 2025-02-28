@@ -39,8 +39,9 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $slug = Str::slug($request->name . ' ' . 'Inventory');
+        $slug = Str::slug($request->name.' '.'Inventory');
         Product::create(array_merge($request->validated(), ['slug' => $slug]));
+
         return redirect()->route('products.index');
     }
 
@@ -73,7 +74,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return redirect()->route('products.index');
     }
 
     public function categories()

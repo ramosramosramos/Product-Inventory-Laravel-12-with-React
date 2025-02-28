@@ -12,7 +12,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)->except(['update', 'destroy']);
+    Route::post('products/{product}/update', [ProductController::class, 'update'])->name('products.update');
+    Route::post('products/{product}/destroy', [ProductController::class, 'destroy'])->name('products.destroy');
 });
 
 require __DIR__.'/settings.php';

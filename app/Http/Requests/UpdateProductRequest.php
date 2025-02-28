@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,18 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', Rule::unique(Product::class)->ignore(request()->route()->parameter('product')->id)],
+            'price' => ['required', 'numeric'],
+            'category_id' => ['required', 'numeric', 'exists:categories,id'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.unique' => 'The product name has already taken.',
+            'category_id.required' => 'The category field is required',
+            'category_id.exists' => 'The category does not exists in the collections.',
         ];
     }
 }
