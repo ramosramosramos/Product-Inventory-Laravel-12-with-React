@@ -32,9 +32,9 @@ export default function Index({ products }: { products: { data: Product[], meta:
 
                 <div className='w-full max-w-5xl m-auto'>
                    <ProductTable products={products.data} />
+                        <DefaultPaginator links={products.meta.links} />
                    </div>
                     <div className='flex justify-center mt-4 mb-3'>
-                        <DefaultPaginator links={products.meta.links} />
                     </div>
 
                 </div>

@@ -8,26 +8,30 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import { type Link } from "@/types"
+import { router } from "@inertiajs/react"
 
 export function DefaultPaginator({ links }: { links: Link[] }) {
-    console.log(links);
+
+    const handlePageClick = (url="")=>{
+       router.get(url,{},{preserveScroll:true})
+    }
     return (
         <Pagination>
-            <PaginationContent className="gap-5">
+            <PaginationContent className="">
 
                 {links.map((link) => {
                     if(link.label.endsWith('Previous')){
-                        return (<PaginationItem key={link.label} className="w-[max-content]">
-                            <PaginationPrevious isActive={link.active} href="#"> <span dangerouslySetInnerHTML={{ __html: link.label }} /> </PaginationPrevious>
+                        return (<PaginationItem  key={link.label} className="w-[max-content] cursor-pointer">
+                            <PaginationPrevious isActive={link.active} onClick={()=>handlePageClick(link.url)} > <span dangerouslySetInnerHTML={{ __html: link.label }} /> </PaginationPrevious>
                         </PaginationItem>)
                     }
                     if(link.label.startsWith('Next')){
-                        return (<PaginationItem key={link.label} className="w-[max-content]">
-                            <PaginationNext isActive={link.active} href="#"> <span dangerouslySetInnerHTML={{ __html: link.label }} /> </PaginationNext>
+                        return (<PaginationItem key={link.label} className="w-[max-content]  cursor-pointer">
+                            <PaginationNext isActive={link.active} onClick={()=>handlePageClick(link.url)} > <span dangerouslySetInnerHTML={{ __html: link.label }} /> </PaginationNext>
                         </PaginationItem>)
                     }
-                    return (<PaginationItem key={link.label} className="w-[max-content]">
-                        <PaginationLink isActive={link.active} href="#"> <span dangerouslySetInnerHTML={{ __html: link.label }} /> </PaginationLink>
+                    return (<PaginationItem key={link.label} className="w-[max-content]  cursor-pointer">
+                        <PaginationLink isActive={link.active} onClick={()=>handlePageClick(link.url)} > <span dangerouslySetInnerHTML={{ __html: link.label }} /> </PaginationLink>
                     </PaginationItem>)
                 }
 
