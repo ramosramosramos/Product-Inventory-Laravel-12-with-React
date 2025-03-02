@@ -22,7 +22,7 @@ class ProductFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name),
+            'slug' => Str::slug(uniqid($name)),
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'category_id' => Category::factory(),
             'deleted_at' => null,

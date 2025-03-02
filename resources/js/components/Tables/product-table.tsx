@@ -23,8 +23,8 @@ export function ProductTable({ products = [] }: { products: Product[] }) {
             <TableCaption>A list of your recent products.</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Product ID</TableHead>
-                    <TableHead className="w-[max-content]">Product name</TableHead>
+                    <TableHead className="w-[100px] text-nowrap">Product ID</TableHead>
+                    <TableHead className="w-[max-content] text-nowrap">Product name</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead className="w-[100px]">Actions</TableHead>

@@ -40,8 +40,15 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface Link{
+    active?:boolean;
+    label:string;
+    url:string;
+}
 
-
+export interface Meta{
+    links:Link[];
+}
 
 export interface Product {
     id: number;

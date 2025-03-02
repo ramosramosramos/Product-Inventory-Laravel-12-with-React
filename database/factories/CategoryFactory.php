@@ -17,7 +17,7 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name1 = $this->faker->word();
+        $name1 = uniqid($this->faker->word());
         $name2 = $this->faker->word();
 
         return [
