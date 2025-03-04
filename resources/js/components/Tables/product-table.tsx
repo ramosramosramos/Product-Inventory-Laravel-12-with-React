@@ -8,15 +8,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Trash2 } from 'lucide-react';
+import { ArchiveRestore, Trash2 } from 'lucide-react';
 import { type Product } from "@/types"
 import { Button } from "../ui/button"
 import { Pencil } from 'lucide-react';
-import { router } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 export function ProductTable({ products = [] }: { products: Product[] }) {
 
 
+    const { post, get, processing } = useForm({});
 
     return (
         <Table className="w-full">
@@ -38,22 +39,49 @@ export function ProductTable({ products = [] }: { products: Product[] }) {
                         <TableCell>{product.price}</TableCell>
                         <TableCell>{product.category}</TableCell>
                         <TableCell className="flex gap-3.5">
-                            <Button size={"sm"} variant={"outline"} className="cursor-pointer" onClick={(e) => {
-                                router.get(route('products.edit', product.id));
-                            }}  >
-                                <Pencil />
-                            </Button>
-                            <Button size={"sm"} variant={"destructive"} className="cursor-pointer" onClick={() => {
-                                router.post(route('products.destroy', product.id), {
-
-                                }, {
-                                    onSuccess: () => {
-                                        toast.success(`The product ${product.name} is successfully deleted.`);
-                                    }
-                                });
-                            }}  >
-                                <Trash2 />
-                            </Button>
+                            {route().current('products.index') &&
+                                <>
+                                    <Button size={"sm"} variant={"outline"} className="cursor-pointer" onClick={(e) => {
+                                        get(route('products.edit', product.id));
+                                    }}  >
+                                        <Pencil />
+                                    </Button>
+                                    <Button size={"sm"} variant={"destructive"} className="cursor-pointer" onClick={() => {
+                                        post(route('products.destroy', product.id), {
+                                            onSuccess: () => {
+                                                toast.success(`The product ${product.name} is successfully deleted.`);
+                                            }
+                                        });
+                                    }}  >
+                                        <Trash2 />
+                                    </Button>
+                                </>
+                            }
+                            {route().current('products.deleted') &&
+                                <>
+                                    <Button size={"sm"} variant={"sucess"} className="cursor-pointer" onClick={(e) => {
+                                        post(route('products.restore', product.id),
+                                            {
+                                                preserveScroll: true,
+                                                onSuccess: () => {
+                                                    toast.success(`The product ${product.name} is  successfully restored.`);
+                                                }
+                                            });
+                                    }}  >
+                                        <ArchiveRestore />
+                                    </Button>
+                                    <Button size={"sm"} variant={"destructive"} className="cursor-pointer" onClick={() => {
+                                        post(route('products.forceDelete', product.id), {
+                                            preserveScroll: true,
+                                            onSuccess: () => {
+                                                toast.error(`The product ${product.name} is  deleted permanently.`);
+                                            }
+                                        });
+                                    }}  >
+                                        <Trash2 /> Delete permanently
+                                    </Button>
+                                </>
+                            }
                         </TableCell>
                     </TableRow>
                 ))}

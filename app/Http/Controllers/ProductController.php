@@ -22,11 +22,13 @@ class ProductController extends Controller
         $products = Product::query()
             ->with('category:id,name')
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('price', 'like', '%' . $search . '%')
-                    ->orWhereHas('category', function ($query) use ($search) {
-                        $query->where('name', 'like', '%' . $search . '%');
-                    });
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('price', 'like', '%' . $search . '%')
+                        ->orWhereHas('category', function ($q) use ($search) {
+                            $q->where('name', 'like', '%' . $search . '%');
+                        });
+                });
             })
             ->select('id', 'name', 'price', 'category_id')
             ->orderBy('id', 'desc')
@@ -43,17 +45,17 @@ class ProductController extends Controller
     {
         $search = request()->input('search');
 
-        $products = Product::query()
-            ->onlyTrashed()
+        $products = Product::onlyTrashed()
             ->with('category:id,name')
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('price', 'like', '%' . $search . '%')
-                    ->orWhereHas('category', function ($query) use ($search) {
-                        $query->where('name', 'like', '%' . $search . '%');
-                    });
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('price', 'like', '%' . $search . '%')
+                        ->orWhereHas('category', function ($q) use ($search) {
+                            $q->where('name', 'like', '%' . $search . '%');
+                        });
+                });
             })
-            ->whereNotNull('deleted_at')
             ->select('id', 'name', 'price', 'category_id')
             ->orderBy('id', 'desc')
             ->paginate(10);
@@ -118,6 +120,18 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+    }
+    public function restore( $id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+
+        $product->restore();
+    }
+    public function forceDelete( $id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+
+        $product->forceDelete();
     }
 
     public function categories()

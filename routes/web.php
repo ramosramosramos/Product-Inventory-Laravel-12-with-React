@@ -16,6 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/inventory/products/deleted', [ProductController::class, 'deleted'])->name('products.deleted');
     Route::post('products/{product}/update', [ProductController::class, 'update'])->name('products.update');
     Route::post('products/{product}/destroy', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+    Route::post('products/{id}/forceDelete', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
 });
 
 require __DIR__.'/settings.php';

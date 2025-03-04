@@ -40,9 +40,9 @@ export default function Deleted({ products ,filters}: { products: { data: Produc
     }
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Products" />
+            <Head title="Deleted products" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-               
+
                 <div className="">
                    <form onSubmit={handleSearch}>
                    <SearchInput
