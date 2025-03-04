@@ -10,10 +10,10 @@ import {
 import { type Link } from "@/types"
 import { router } from "@inertiajs/react"
 
-export function DefaultPaginator({ links }: { links: Link[] }) {
+export function DefaultPaginator({ links,filters }: { links: Link[],filters:any }) {
 
     const handlePageClick = (url="")=>{
-       router.get(url,{},{preserveScroll:true})
+       router.get(url,{search:filters.search},{preserveScroll:true})
     }
     return (
         <Pagination>

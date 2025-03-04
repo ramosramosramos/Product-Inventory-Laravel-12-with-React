@@ -24,7 +24,7 @@ interface FormSearch {
 
 
 export default function Index({ products ,filters}: { products: { data: Product[], meta: Meta },filters:{search:string} }) {
-    
+
     const { data, setData, get } = useForm<FormSearch>({
         search: filters.search,
     })
@@ -62,7 +62,7 @@ export default function Index({ products ,filters}: { products: { data: Product[
 
                     <div className='w-full max-w-5xl m-auto'>
                         <ProductTable products={products.data} />
-                        <DefaultPaginator links={products.meta.links} />
+                        <DefaultPaginator filters={filters} links={products.meta.links} />
                     </div>
                     <div className='flex justify-center mt-4 mb-3'>
                     </div>

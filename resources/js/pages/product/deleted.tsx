@@ -58,7 +58,7 @@ export default function Deleted({ products ,filters}: { products: { data: Produc
 
                     <div className='w-full max-w-5xl m-auto'>
                         <ProductTable products={products.data} />
-                        <DefaultPaginator links={products.meta.links} />
+                        <DefaultPaginator filters={filters} links={products.meta.links} />
                     </div>
                     <div className='flex justify-center mt-4 mb-3'>
                     </div>
