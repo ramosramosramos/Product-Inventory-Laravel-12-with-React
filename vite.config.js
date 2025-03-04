@@ -4,7 +4,7 @@ import {
     defineConfig
 } from 'vite';
 import tailwindcss from "@tailwindcss/vite";
-
+const ReactCompilerConfig = { target:'19'};
 export default defineConfig({
     plugins: [
         laravel({
@@ -12,7 +12,13 @@ export default defineConfig({
             ssr: 'resources/js/ssr.jsx',
             refresh: true,
         }),
-        react(),
+        react({
+            babel: {
+              plugins: [
+                ["babel-plugin-react-compiler", ReactCompilerConfig],
+              ],
+            },
+          }),
         tailwindcss(),
     ],
     esbuild: {

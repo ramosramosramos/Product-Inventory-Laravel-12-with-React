@@ -8,7 +8,7 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { LoaderCircle, LucideMicOff } from 'lucide-react';
 import { FormEventHandler } from 'react';
-import { SelectInput } from '@/components/Inputs/SelectInputs';
+import { SelectInput } from '@/components/inputs/select-inputs';
 import { toast } from "sonner"
 
 const breadcrumbs: BreadcrumbItem[] = [

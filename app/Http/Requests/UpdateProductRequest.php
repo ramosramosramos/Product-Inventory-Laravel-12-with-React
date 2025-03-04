@@ -24,7 +24,7 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', Rule::unique(Product::class)->ignore(request()->route()->parameter('product')->id)],
+            'name' => ['required', 'string', Rule::unique(Product::class)->ignore($this->product->id)],
             'price' => ['required', 'numeric'],
             'category_id' => ['required', 'numeric', 'exists:categories,id'],
         ];

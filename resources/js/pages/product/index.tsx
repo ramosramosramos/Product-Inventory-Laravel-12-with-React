@@ -1,4 +1,4 @@
-import { ProductTable } from '@/components/Tables/product-table';
+import { ProductTable } from '@/components/tables/product-table';
 import AppLayout from '@/layouts/app-layout';
 import { Meta, type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
@@ -6,7 +6,7 @@ import { type Product } from '@/types';
 
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { DefaultPaginator } from '@/components/Paginators/DefaultPaginator';
+import { DefaultPaginator } from '@/components/paginators/default-paginator';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
