@@ -17,12 +17,27 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::select('id', 'name', 'price', 'category_id')
+        $search = request()->input('search');
+
+        $products = Product::query()
             ->with('category:id,name')
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('price', 'like', '%'.$search.'%')
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('name', 'like', '%'.$search.'%');
+                    });
+            })
+            ->select('id', 'name', 'price', 'category_id')
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-        return inertia('product/index', ['products' => ProductResource::collection($products)]);
+        return inertia('product/index', [
+            'products' => ProductResource::collection($products),
+            'filters' => [
+                'search' => $search,
+            ],
+        ]);
     }
 
     /**
@@ -39,7 +54,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $slug = Str::slug($request->name . ' ' . 'Inventory');
+        $slug = Str::slug($request->name.' '.'Inventory');
         Product::create(array_merge($request->validated(), ['slug' => $slug]));
 
     }
@@ -59,7 +74,7 @@ class ProductController extends Controller
     {
         return inertia('product/edit', [
             'categories' => $this->categories(),
-            'product' => $product
+            'product' => $product,
         ]);
     }
 
@@ -68,7 +83,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $slug = Str::slug($request->name . ' ' . 'Inventory');
+        $slug = Str::slug($request->name.' '.'Inventory');
         $product->update(array_merge($request->validated(), ['slug' => $slug]));
 
     }
