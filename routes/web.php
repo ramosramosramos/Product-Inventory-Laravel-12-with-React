@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
     Route::resource('products', ProductController::class)->except(['update', 'destroy']);
+    Route::get('/inventory/products/deleted', [ProductController::class, 'deleted'])->name('products.deleted');
     Route::post('products/{product}/update', [ProductController::class, 'update'])->name('products.update');
     Route::post('products/{product}/destroy', [ProductController::class, 'destroy'])->name('products.destroy');
 });

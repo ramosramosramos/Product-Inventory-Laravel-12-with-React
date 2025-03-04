@@ -22,10 +22,10 @@ class ProductController extends Controller
         $products = Product::query()
             ->with('category:id,name')
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('price', 'like', '%'.$search.'%')
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('price', 'like', '%' . $search . '%')
                     ->orWhereHas('category', function ($query) use ($search) {
-                        $query->where('name', 'like', '%'.$search.'%');
+                        $query->where('name', 'like', '%' . $search . '%');
                     });
             })
             ->select('id', 'name', 'price', 'category_id')
@@ -33,6 +33,32 @@ class ProductController extends Controller
             ->paginate(10);
 
         return inertia('product/index', [
+            'products' => ProductResource::collection($products),
+            'filters' => [
+                'search' => $search,
+            ],
+        ]);
+    }
+    public function deleted()
+    {
+        $search = request()->input('search');
+
+        $products = Product::query()
+            ->onlyTrashed()
+            ->with('category:id,name')
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('price', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%');
+                    });
+            })
+            ->whereNotNull('deleted_at')
+            ->select('id', 'name', 'price', 'category_id')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+
+        return inertia('product/deleted', [
             'products' => ProductResource::collection($products),
             'filters' => [
                 'search' => $search,
@@ -54,9 +80,8 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $slug = Str::slug($request->name.' '.'Inventory');
+        $slug = Str::slug($request->name . ' ' . 'Inventory');
         Product::create(array_merge($request->validated(), ['slug' => $slug]));
-
     }
 
     /**
@@ -83,9 +108,8 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $slug = Str::slug($request->name.' '.'Inventory');
+        $slug = Str::slug($request->name . ' ' . 'Inventory');
         $product->update(array_merge($request->validated(), ['slug' => $slug]));
-
     }
 
     /**
@@ -94,7 +118,6 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-
     }
 
     public function categories()

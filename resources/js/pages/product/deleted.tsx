@@ -12,8 +12,8 @@ import { FormEventHandler } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Products',
-        href: route('products.index'),
+        title: 'Deleted products',
+        href: route('products.deleted'),
     },
 ];
 
@@ -23,14 +23,14 @@ interface FormSearch {
 }
 
 
-export default function Index({ products ,filters}: { products: { data: Product[], meta: Meta },filters:{search:string} }) {
-    
+export default function Deleted({ products ,filters}: { products: { data: Product[], meta: Meta },filters:{search:string} }) {
+
     const { data, setData, get } = useForm<FormSearch>({
         search: filters.search,
     })
     const handleSearch: FormEventHandler = (e) => {
         e.preventDefault();
-        get(route('products.index'),{
+        get(route('products.deleted'),{
             preserveScroll:true,
             onSuccess:()=>{
 
@@ -42,11 +42,7 @@ export default function Index({ products ,filters}: { products: { data: Product[
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-6">
-                    <Button className='cursor-pointer w-[max-content]' variant='default' onClick={() => router.get(route('products.create'))}>
-                        <Plus />
-                    </Button>
-                </div>
+               
                 <div className="">
                    <form onSubmit={handleSearch}>
                    <SearchInput
